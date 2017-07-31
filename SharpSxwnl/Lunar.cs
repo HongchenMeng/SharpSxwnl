@@ -405,8 +405,83 @@ namespace SharpSxwnl
 
             this.yueLiText(By, Bm, curJD);   // C#: 转换时新增功能而增加的语句
         }
+        /// <summary>
+        /// 生成指定日信息,结果返回在lun中,curJD为当前日期(用于设置今日标识)
+        /// </summary>
+        /// <param name="By">要生成月历的年</param>
+        /// <param name="Bm">要生成月历的月</param>
+        /// <param name="curJD">当前日期(用于设置今日标识)</param>
+        public void yueLiHTML2(int By, int Bm, double curJD)
+        {
+            int i;
+            string c;
+            StringBuilder cr = new StringBuilder();    // C#: 为提高字符串处理效率, 使用 StringBuilder
+            OB ob;     // 日历物件
+
+            this.yueLiCalc(By, Bm);    // 农历计算
+
+            // 年份处理
+            c = this.nianhao + " 农历" + this.Ly + "年【" + this.ShX + "年】";       // 干支纪年
+
+             i = (int)curJD;
+                // 遍历本月各日(公历), 生成第 i 日的日历页面
+                ob = (this.lun[i]);
+
+                c = ""; 
+                if (ob.A.Length > 0)
+                    c += "<font color=red>" + this.substr2(ob.A, 4, "..") + "</font>";
+                if (c.Length <= 0 && ob.B.Length > 0)
+                    c = "<font color=blue>" + this.substr2(ob.B, 4, "..") + "</font>";
+                if (c.Length <= 0 && ob.Ldc == "初一")
+                    c = ob.Lleap + ob.Lmc + "月" + (ob.Ldn == 30 ? "大" : "小");   // 农历历月(闰月及大小等)
+                if (c.Length <= 0)
+                    c = ob.Ldc;   // 取农历日名称
+        }
+
+        public string getnianhao(int By, int Bm, double curJD)
+        {
+            int i;
+            string c;
+            StringBuilder cr = new StringBuilder();    // C#: 为提高字符串处理效率, 使用 StringBuilder
+            OB ob;     // 日历物件
+
+            this.yueLiCalc(By, Bm);    // 农历计算
+            return this.nianhao;
+        }
+        public string getgzjn(int By, int Bm, double curJD)
+        {
+            int i;
+            string c;
+            StringBuilder cr = new StringBuilder();    // C#: 为提高字符串处理效率, 使用 StringBuilder
+            OB ob;     // 日历物件
+
+            this.yueLiCalc(By, Bm);    // 农历计算
+          return  this.Ly;
+        }
+        public string getSX(int By, int Bm, double curJD)
+        {
+            int i;
+            string c;
+            StringBuilder cr = new StringBuilder();    // C#: 为提高字符串处理效率, 使用 StringBuilder
+            OB ob;     // 日历物件
+
+            this.yueLiCalc(By, Bm);    // 农历计算
+            return this.ShX;
+        }
+        public string getNL(int By, int Bm, double curJD,int i)
+        {
+          //  int i;
+            StringBuilder cr = new StringBuilder();    // C#: 为提高字符串处理效率, 使用 StringBuilder
+            OB ob;     // 日历物件
+
+            this.yueLiCalc(By, Bm);    // 农历计算
+          //  i = (int)curJD;
+            // 遍历本月各日(公历), 生成第 i 日的日历页面
+            ob = (this.lun[i]);
 
 
+            return ob.Lmc + ob.Ldc;
+        }
 
         #region 初次转换的 yueLiHTML() 方法, 因涉及大量的字符串操作, 故拟使用 StringBuiler 改写以提高效率, 但保留原代码如下
 
@@ -518,7 +593,7 @@ namespace SharpSxwnl
 
         //    this.yueLiText(By, Bm, curJD);   // C#: 转换时新增功能而增加的语句
         //}
-        
+
         #endregion
 
 

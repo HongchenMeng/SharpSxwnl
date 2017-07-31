@@ -39,10 +39,10 @@ namespace TestSharpSxwnl
 
             this.Caly_y.Text = JD.Y.ToString();
 
-            this.Cml_y.Text = JD.Y.ToString();
-            this.Cml_m.Text = JD.M.ToString();
-            this.Cml_d.Text = JD.D.ToString();
-            this.Cml_his.Text = JD.h + ":" + JD.m + ":" + JD.s.ToString("F0").PadLeft(2, '0');
+            this.Cml_y.Text = JD.Y.ToString();//公历年
+            this.Cml_m.Text = JD.M.ToString();//公历月
+            this.Cml_d.Text = JD.D.ToString();//公历日
+            this.Cml_his.Text = JD.h + ":" + JD.m + ":" + JD.s.ToString("F0").PadLeft(2, '0');//时分秒 16:25:35
 
             this.Cal_y.Text = JD.Y.ToString();
             this.Cal_m.Text = JD.M.ToString();
@@ -263,12 +263,12 @@ namespace TestSharpSxwnl
             StringBuilder sb = new StringBuilder();
             if (true)
             { //鼠标移过日期上方
-                sb.AppendLine(LunarHelper.Ayear2year(ob.y) + "年" + ob.m + "月" + ob.d + "日");
-                sb.AppendLine(ob.Lyear3 + "年 星期" + JD.Weeks[(int)(ob.week)] + " " + ob.XiZ);
-                sb.AppendLine(ob.Lyear4 + "年 " + ob.Lleap + ob.Lmc + "月" + (ob.Ldn > 29 ? "大 " : "小 ") + ob.Ldc + "日");
-                sb.AppendLine(ob.Lyear2 + "年 " + ob.Lmonth2 + "月 " + ob.Lday2 + "日");
-                sb.AppendLine("回历[" + ob.Hyear + "年" + ob.Hmonth + "月" + ob.Hday + "日]");
-                if (ob.yxmc.Length > 0) sb.Append(ob.yxmc + " " + ob.yxsj + " ");
+                sb.AppendLine(LunarHelper.Ayear2year(ob.y) + "年" + ob.m + "月" + ob.d + "日");//公历日期
+                sb.AppendLine(ob.Lyear3 + "年 星期" + JD.Weeks[(int)(ob.week)] + " " + ob.XiZ);// 丁酉年 星期日 狮子座
+                sb.AppendLine(ob.Lyear4 + "年 " + ob.Lleap + ob.Lmc + "月" + (ob.Ldn > 29 ? "大 " : "小 ") + ob.Ldc + "日");// 4715年 润六月大 初八日
+                sb.AppendLine(ob.Lyear2 + "年 " + ob.Lmonth2 + "月 " + ob.Lday2 + "日");// 丁酉年 丁未月 戊午日
+                sb.AppendLine("回历[" + ob.Hyear + "年" + ob.Hmonth + "月" + ob.Hday + "日]");//回历[1438年11月6日]
+                if (ob.yxmc.Length > 0) sb.Append(ob.yxmc + " " + ob.yxsj + " ");//
                 if (ob.jqmc.Length > 0) sb.AppendLine("定" + ob.jqmc + " " + ob.jqsj);
                 else { if (ob.Ljq.Length > 0) sb.AppendLine(ob.Ljq); }
                 if (ob.A.Length > 0) sb.Append(ob.A + " ");
