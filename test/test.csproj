@@ -33,8 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SharpSxwnl">
-      <HintPath>..\SharpSxwnl\bin\Release\SharpSxwnl.dll</HintPath>
+    <Reference Include="SharpSxwnl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharpSxwnl\bin\Debug\SharpSxwnl.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

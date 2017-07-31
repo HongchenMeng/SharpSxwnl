@@ -37,7 +37,12 @@ namespace test
 
             string nl = lun.getNL((int)By, (int)Bm, curJD,nowDT.Day);
 
+            string gz = lun.getgzjn((int)By, (int)Bm, curJD);
+
+            string sx = lun.getSX((int)By, (int)Bm, curJD);
             Console.WriteLine(nl);
+            Console.WriteLine(gz);
+            Console.WriteLine(sx);
             Console.ReadLine();
             
         }

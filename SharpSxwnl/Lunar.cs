@@ -460,10 +460,8 @@ namespace SharpSxwnl
         }
         public string getSX(int By, int Bm, double curJD)
         {
-            int i;
-            string c;
+
             StringBuilder cr = new StringBuilder();    // C#: 为提高字符串处理效率, 使用 StringBuilder
-            OB ob;     // 日历物件
 
             this.yueLiCalc(By, Bm);    // 农历计算
             return this.ShX;
@@ -477,10 +475,28 @@ namespace SharpSxwnl
             this.yueLiCalc(By, Bm);    // 农历计算
           //  i = (int)curJD;
             // 遍历本月各日(公历), 生成第 i 日的日历页面
-            ob = (this.lun[i]);
+            ob = (this.lun[i-1]);
 
+            StringBuilder sb = new StringBuilder();
 
-            return ob.Lmc + ob.Ldc;
+                sb.AppendLine(LunarHelper.Ayear2year(ob.y) + "年" + ob.m + "月" + ob.d + "日");//公历日期
+                sb.AppendLine(ob.Lyear3 + "年 星期" + JD.Weeks[(int)(ob.week)] + " " + ob.XiZ);// 丁酉年 星期日 狮子座
+                sb.AppendLine(ob.Lyear4 + "年 " + ob.Lleap + ob.Lmc + "月" + (ob.Ldn > 29 ? "大 " : "小 ") + ob.Ldc + "日");// 4715年 润六月大 初八日
+                sb.AppendLine(ob.Lyear2 + "年 " + ob.Lmonth2 + "月 " + ob.Lday2 + "日");// 丁酉年 丁未月 戊午日
+                sb.AppendLine("回历[" + ob.Hyear + "年" + ob.Hmonth + "月" + ob.Hday + "日]");//回历[1438年11月6日]
+                if (ob.yxmc.Length > 0) sb.Append(ob.yxmc + " " + ob.yxsj + " ");//
+                if (ob.jqmc.Length > 0) sb.AppendLine("定" + ob.jqmc + " " + ob.jqsj);
+                else { if (ob.Ljq.Length > 0) sb.AppendLine(ob.Ljq); }
+                if (ob.A.Length > 0) sb.Append(ob.A + " ");
+                if (ob.B.Length > 0) sb.Append(ob.B + " ");
+                if (ob.C.Length > 0) sb.Append(ob.C);
+
+                sb.AppendLine();
+                sb.Append("日十二建: " + ob.Ri12Jian);
+                //this.Cal_pan.Text = sb.ToString() + "\r\n\r\n" + thisDaySunMoonInfo;
+            
+
+            return  ob.Lleap+ ob.Lmc +"月" + ob.Ldc+ "\r\n\r\n" + sb.ToString();
         }
 
         #region 初次转换的 yueLiHTML() 方法, 因涉及大量的字符串操作, 故拟使用 StringBuiler 改写以提高效率, 但保留原代码如下
