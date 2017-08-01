@@ -405,37 +405,116 @@ namespace SharpSxwnl
 
             this.yueLiText(By, Bm, curJD);   // C#: 转换时新增功能而增加的语句
         }
-        /// <summary>
-        /// 生成指定日信息,结果返回在lun中,curJD为当前日期(用于设置今日标识)
-        /// </summary>
-        /// <param name="By">要生成月历的年</param>
-        /// <param name="Bm">要生成月历的月</param>
-        /// <param name="curJD">当前日期(用于设置今日标识)</param>
-        public void yueLiHTML2(int By, int Bm, double curJD)
+        public void yueLiHTML(int By, int Bm, double curJD, int day)
         {
-            int i;
-            string c;
+            string sty_head = " style='font-family: 宋体; font-size: 14px; text-align: center; background-color: #E0E0FF; color: #000000; font-weight: bold' ";
+            string sty_body = " style='font-family: 宋体; font-size: 12px; text-align: center ' ";
+            string sty_date = " style='font-family: Arial Black; text-align: center;font-size: 20px' ";
+            string sty_date2 = " style='font-family: Arial Black; text-align: center;font-size: 20px; color: #FF0000' ";
+            string sty_cur = " style='background-color:#90D050' ";
+
+            int i, j;
+            string c, c2;
             StringBuilder cr = new StringBuilder();    // C#: 为提高字符串处理效率, 使用 StringBuilder
+            string isM;
             OB ob;     // 日历物件
 
             this.yueLiCalc(By, Bm);    // 农历计算
 
             // 年份处理
             c = this.nianhao + " 农历" + this.Ly + "年【" + this.ShX + "年】";       // 干支纪年
+            if (c.Length > 33) c = "<span style='font-size:12px'>" + c + "</span>";
+            else c = "<span style='font-size:16px;font-weight:bold'>" + c + "</span>";
+            this.pg0 = c;
 
-             i = (int)curJD;
-                // 遍历本月各日(公历), 生成第 i 日的日历页面
+            //月历处理
+            StringBuilder ta0 = new StringBuilder("<tr>"
+              + "<td" + sty_head + "width='%14'>日</td>"
+              + "<td" + sty_head + "width='%14'>一</td>"
+              + "<td" + sty_head + "width='%14'>二</td>"
+              + "<td" + sty_head + "width='%14'>三</td>"
+              + "<td" + sty_head + "width='%14'>四</td>"
+              + "<td" + sty_head + "width='%14'>五</td>"
+              + "<td" + sty_head + "width='%14'>六</td><tr>");    // C#: 为提高字符串处理效率, 使用 StringBuilder
+
+            day--;
+            //for (day = 0; day < this.dn; day++)
+            //{
+            // 遍历本月各日(公历), 生成第 i 日的日历页面
+            ob = (this.lun[day]);
+            if (day == 0)
+            {
+                for (j = 0; j < this.w0; j++)     // 首行前面的空单元格(依据: 本月首日的星期)
+                    cr.Append("<td" + sty_body + "></td>");
+            }
+
+            c = ""; isM = "";  // 文字格式控制项
+            if (ob.A.Length > 0)
+                c += "<font color=red>" + this.substr2(ob.A, 4, "..") + "</font>";
+            if (c.Length <= 0 && ob.B.Length > 0)
+                c = "<font color=blue>" + this.substr2(ob.B, 4, "..") + "</font>";
+            if (c.Length <= 0 && ob.Ldc == "初一")
+                c = ob.Lleap + ob.Lmc + "月" + (ob.Ldn == 30 ? "大" : "小");   // 农历历月(闰月及大小等)
+            if (c.Length <= 0)
+                c = ob.Ldc;   // 取农历日名称
+
+            if (ob.yxmc == "朔") isM = "<font color=#505000>●</font>";           // 取月相
+            if (ob.yxmc == "望") isM = "<font color=#F0B000>●</font>";           // 取月相
+            if (ob.yxmc == "上弦") isM = "<font color=#F0B000><b>∪</b></font>";
+            if (ob.yxmc == "下弦") isM = "<font color=#F0B000><b>∩</b></font>";
+
+            if (ob.jqmc.Length > 0)
+                isM += "<font color=#00C000>◆</font>";  // 定气标记
+
+            if (ob.Fjia != 0)
+                c2 = sty_date2; //节日置红色
+            else c2 = sty_date;
+
+            //c2 += " onmouseover='showMessD(" + i + ")'";     // C#: 注掉鼠标事件, 下同
+            //c2 += " onmouseout ='showMessD(-1)'";
+
+            c2 = "<span" + c2 + ">" + ob.d + "</span>"; //公历的日名称
+
+            if (ob.d0 == curJD)
+                c2 = "<span" + sty_cur + ">" + c2 + "</span>";   // 今日标识
+
+
+            //cr += "<td" + sty_body + "width='14%'>" + c2 + "<br>" + isM + c + "</td>";      // C#: 注释, 改写如下:
+            cr.Append("<td" + sty_body + "width='14%' onmouseover='changeBackcolor(this,1)' " +
+                          "onmouseout='changeBackcolor(this,0)'>" +
+                          c2 + "<br>" + isM + c + "</td>");               // C#: 新改写的语句, 增加鼠标事件处理
+
+            if (day == this.dn - 1)
+            {
+                for (j = 0; j < 6 - ob.week; j++)      // 末行后面的空单元格(依据: 本月末日的星期)
+                    cr.Append("<td" + sty_body + "></td>");
+            }
+            if (day == this.dn - 1 || ob.week == 6)
+            {
+                ta0.Append("<tr>" + cr.ToString() + "</tr>");
+                cr.Remove(0, cr.Length);
+            }
+       // }
+            this.pg1 = "<table border=0 cellpadding=3 cellspacing=1 width='100%'>" + ta0.ToString() + "</table>";
+
+            string b2 = "", b3 = "", b4 = "";
+            int c__;
+            for (i = 0; i < this.dn; i++)
+            {
                 ob = (this.lun[i]);
+                c__ = i + 1;
+                if (c__ < 10)
+                    c = "&nbsp;" + c__;
+                else
+                    c = c__.ToString();
+                //if(ob.Ldc =="初一") b1 += c +"日 "+ob.Lleap+ob.Lmc+"月" + (ob.Ldn==30?"大":"小")+" &nbsp;";
+                if (ob.yxmc == "朔" || ob.yxmc == "望") b2 += c + "日 " + ob.yxsj + ob.yxmc + "月 &nbsp;";
+                if (ob.yxmc == "上弦" || ob.yxmc == "下弦") b3 += c + "日 " + ob.yxsj + ob.yxmc + " &nbsp;";
+                if (ob.jqmc.Length > 0) b4 += c + "日 " + ob.jqsj + ob.jqmc + " &nbsp;";
+            }
+            this.pg2 = b2 + "<br>" + b3 + "<br>" + b4;
 
-                c = ""; 
-                if (ob.A.Length > 0)
-                    c += "<font color=red>" + this.substr2(ob.A, 4, "..") + "</font>";
-                if (c.Length <= 0 && ob.B.Length > 0)
-                    c = "<font color=blue>" + this.substr2(ob.B, 4, "..") + "</font>";
-                if (c.Length <= 0 && ob.Ldc == "初一")
-                    c = ob.Lleap + ob.Lmc + "月" + (ob.Ldn == 30 ? "大" : "小");   // 农历历月(闰月及大小等)
-                if (c.Length <= 0)
-                    c = ob.Ldc;   // 取农历日名称
+            this.yueLiText(By, Bm, curJD);   // C#: 转换时新增功能而增加的语句
         }
 
         public string getnianhao(int By, int Bm, double curJD)

@@ -38,7 +38,7 @@
   <ItemGroup>
     <Reference Include="ComponentFactory.Krypton.Toolkit, Version=3.5.0.0, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e, processorArchitecture=MSIL" />
     <Reference Include="SharpSxwnl">
-      <HintPath>..\SharpSxwnl\bin\Release\SharpSxwnl.dll</HintPath>
+      <HintPath>..\SharpSxwnl\bin\Debug\SharpSxwnl.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
